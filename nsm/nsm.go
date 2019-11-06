@@ -23,7 +23,11 @@ import (
 )
 
 // MeshName just returns the name of the mesh the client is representing
+
 func (nsmClient *Client) MeshName(context.Context, *meshes.MeshNameRequest) (*meshes.MeshNameResponse, error) {
+
+func (nsmClient *NSMClient) MeshName(context.Context, *meshes.MeshNameRequest) (*meshes.MeshNameResponse, error) {
+
 	return &meshes.MeshNameResponse{Name: "Network Service Mesh"}, nil
 }
 
@@ -313,7 +317,10 @@ func (nsmClient *Client) updateResource(ctx context.Context, res schema.GroupVer
 	logrus.Infof("Updated Resource of type: %s and name: %s", data.GetKind(), data.GetName())
 	return nil
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/nsm_update
 // ApplyOperation is a method invoked to apply a particular operation on the mesh in a namespace
 func (nsmClient *Client) ApplyOperation(ctx context.Context, arReq *meshes.ApplyRuleRequest) (*meshes.ApplyRuleResponse, error) {
 	if arReq == nil {
@@ -410,6 +417,7 @@ func (nsmClient *Client) ApplyOperation(ctx context.Context, arReq *meshes.Apply
 				OperationId: arReq.OperationId,
 				EventType:   meshes.EventType_INFO,
 				Summary:     fmt.Sprintf("%s %s successfully", appName, opName),
+				Details: fmt.Sprintf("%s %s successfully", appName, opName),
 			}
 
 			return
@@ -467,6 +475,7 @@ func (nsmClient *Client) ApplyOperation(ctx context.Context, arReq *meshes.Apply
 			}
 			detailedMsg = fmt.Sprintf("%s is now %s. %s", appName, opName, portMsg)
 		}
+		logrus.Debugf("details msg: %s", detailedMsg)
 		nsmClient.eventChan <- &meshes.EventsResponse{
 			OperationId: arReq.OperationId,
 			EventType:   meshes.EventType_INFO,
@@ -538,8 +547,10 @@ func (nsmClient *Client) executeTemplate(ctx context.Context, username, namespac
 	return buf.String(), nil
 }
 
+
 //CreateMeshInstance is called from UI
 func (nsmClient *Client) CreateMeshInstance(_ context.Context, k8sReq *meshes.CreateMeshInstanceRequest) (*meshes.CreateMeshInstanceResponse, error) {
+
 	var k8sConfig []byte
 	contextName := ""
 	if k8sReq != nil {
@@ -561,8 +572,13 @@ func (nsmClient *Client) CreateMeshInstance(_ context.Context, k8sReq *meshes.Cr
 	return &meshes.CreateMeshInstanceResponse{}, nil
 }
 
+
 // StreamEvents - streams generated/collected events to the client
 func (nsmClient *Client) StreamEvents(in *meshes.EventsRequest, stream meshes.MeshService_StreamEventsServer) error {
+
+// StreamEvents - streams generated/collected events to the client
+func (nsmClient *NSMClient) StreamEvents(in *meshes.EventsRequest, stream meshes.MeshService_StreamEventsServer) error {
+
 	logrus.Debugf("waiting on event stream. . .")
 	for {
 		select {
@@ -584,6 +600,9 @@ func (nsmClient *Client) StreamEvents(in *meshes.EventsRequest, stream meshes.Me
 	}
 	return nil
 }
+// SupportedOperations - returns a list of supported operations on the mesh
+func (nsmClient *NSMClient) SupportedOperations(context.Context, *meshes.SupportedOperationsRequest) (*meshes.SupportedOperationsResponse, error) {
+
 
 // SupportedOperations - returns a list of supported operations on the mesh
 func (nsmClient *Client) SupportedOperations(context.Context, *meshes.SupportedOperationsRequest) (*meshes.SupportedOperationsResponse, error) {

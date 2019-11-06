@@ -12,7 +12,9 @@ import (
 	"k8s.io/client-go/rest"
 )
 
+
 // Client represents an NSM client in Meshery
+
 type Client struct {
 	config           *rest.Config
 	k8sClientset     *kubernetes.Clientset
